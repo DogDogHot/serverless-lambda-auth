@@ -5,7 +5,7 @@ module.exports.hello = async (event) => {
     statusCode: 200,
     body: JSON.stringify(
       {
-        message: "serverless test",
+        message: "serverless 주과장님 test",
       },
       null,
       2
