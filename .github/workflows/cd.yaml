@@ -21,7 +21,7 @@ jobs:
           stage=${vBranch[2]}                       # vBranch array중에 2번째(branch)를 stage에 저장
           if [[ $stage == "main" ]]
           then
-            stage="production"
+            stage="prod"
           fi
           echo ::set-output name=stage::$stage        # set-stage-env
           echo ::set-output name=region::"ap-northeast-2"        # set=region-env
@@ -29,7 +29,8 @@ jobs:
       - name: serverless deploy
         uses: serverless/github-action@v3
         with:
-          args: -c "serverless deploy --stage=${{ steps.get-environment.outputs.stage }} --region=${{ steps.get-environment.outputs.region }}"
+          args:
+            - "serverless deploy --stage=${{ steps.get-environment.outputs.stage }} --region=${{ steps.get-environment.outputs.region }}"
         env:
           # SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
           # or if using AWS credentials directly
