@@ -1,24 +1,19 @@
-name: Deploy main branch
-
 on:
   push:
     branches:
       - main
 
+name: Deploy to serverless service
+
 jobs:
-  deploy:
-    name: deploy
+  server:
+    name: Deploy Server
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x]
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - run: npm ci
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - name: serverless deploy
         uses: serverless/github-action@v3
         with:
