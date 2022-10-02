@@ -1,0 +1,15 @@
+{
+  "name": "serverless-lambda",
+  "version": "1.0.0",
+  "description": "jwt-project",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:DogDogHot/serverless-lambda.git"
+  },
+  "author": "",
+  "license": "ISC"
+}
