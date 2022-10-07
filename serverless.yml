@@ -30,6 +30,11 @@ provider:
   name: aws
   runtime: nodejs14.x
   stage: ${opt:stage, 'dev'}
+  vpc:
+    securityGroupIds:
+      - sg-0727ed749d8e56097
+    subnetIds:
+      - subnet-04858fbf41c73fffc
 
 package:
   exclude:
