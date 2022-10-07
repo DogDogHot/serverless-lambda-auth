@@ -1,7 +1,7 @@
 const { createClient } = require("redis");
 
 const client = createClient({
-  url: `${process.env.REDIS_URL}:${process.env.REDIS_PORT}`,
+  url: process.env.REDIS_URL,
 });
 
 let isReady = false;
