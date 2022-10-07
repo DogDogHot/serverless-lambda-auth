@@ -1,17 +1,10 @@
-const { createClient } = require("redis");
+const Redis = require("ioredis");
 
-const client = createClient({
-  url: process.env.REDIS_URL,
-});
+const redis = new Redis(process.env.REDIS_PORT, process.env.REDIS_URL);
 
-let isReady = false;
 module.exports.handler = async (event) => {
-  if (!isReady) {
-    await client.connect();
-    isReady = true;
-  }
-  await client.set("key", "value");
-  const result = await client.get("key");
+  await redis.set("key", "value");
+  const result = await redis.get("key");
   return {
     statusCode: 200,
     body: JSON.stringify(

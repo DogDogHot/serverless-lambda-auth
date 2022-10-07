@@ -30,12 +30,19 @@ provider:
   name: aws
   runtime: nodejs14.x
   stage: ${opt:stage, 'dev'}
+
+package:
+  exclude:
+    - node_modules/**
+
 functions:
   hello:
     handler: src/handler.handler
     #   Allow CORS for all requests from any origin
     url:
       cors: true
+    layers:
+      - { Ref: NodeModulesLambdaLayer }
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -88,9 +95,9 @@ functions:
 #       Description: "Description for the output"
 #       Value: "Some output value"
 
-# layers:
-#   nodeModules:
-#     path: layer
-#     name: ${self:provider.stage}-${self:custom.service}-nodeModules
-#     compatibleRuntimes:
-#       - nodejs14.x
+layers:
+  nodeModules:
+    path: layer
+    name: ${self:provider.stage}-${self:custom.service}-nodeModules
+    compatibleRuntimes:
+      - nodejs14.x

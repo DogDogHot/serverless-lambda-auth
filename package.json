@@ -5,6 +5,7 @@
   "main": "handler.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "layer": "cp package.json layer/nodejs/package.json",
     "start-dev": "nodemon --exec serverless offline --stage dev"
   },
   "repository": {
@@ -14,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "redis": "^4.3.1",
+    "ioredis": "^5.2.3",
     "serverless-dotenv-plugin": "^4.0.2",
     "serverless-offline": "^11.0.3"
   },
