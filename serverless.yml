@@ -32,7 +32,7 @@ provider:
   stage: ${opt:stage, 'dev'}
 functions:
   hello:
-    handler: src/handler.hello
+    handler: src/handler.handler
     #   Allow CORS for all requests from any origin
     url:
       cors: true
