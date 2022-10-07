@@ -1,8 +1,7 @@
 const { createClient } = require("redis");
 
 const client = createClient({
-  host: process.env.REDIS_URL,
-  port: 6379,
+  url: process.env.REDIS_URL,
 });
 
 let isReady = false;
