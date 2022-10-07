@@ -1,11 +1,15 @@
 const { createClient } = require("redis");
 
-const client = createClient(6379, process.env.REDIS_URL);
+const client = createClient({
+  host: process.env.REDIS_URL,
+  port: 6379,
+});
 
 let isReady = false;
 module.exports.handler = async (event) => {
   if (!isReady) {
     await client.connect();
+    isReady = true;
   }
   await client.set("key", "value");
   const result = await client.get("key");
