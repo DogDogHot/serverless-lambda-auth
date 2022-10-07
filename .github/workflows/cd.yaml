@@ -14,6 +14,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name : Node Setting
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
+
       - name: Set an Environment Variable # add an environment variable step
         id: get-environment
         run: |
@@ -25,6 +30,10 @@ jobs:
           fi
           echo ::set-output name=stage::$stage        # set-stage-env
           echo ::set-output name=region::"ap-northeast-2"        # set=region-env
+
+      - name: npm install
+        run: |
+          npm i --production
 
       - name: serverless deploy
         uses: serverless/github-action@v3

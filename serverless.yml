@@ -88,9 +88,9 @@ functions:
 #       Description: "Description for the output"
 #       Value: "Some output value"
 
-layers:
-  nodeModules:
-    path: layer
-    name: ${self:provider.stage}-${self:custom.service}-nodeModules
-    compatibleRuntimes:
-      - nodejs14.x
+# layers:
+#   nodeModules:
+#     path: layer
+#     name: ${self:provider.stage}-${self:custom.service}-nodeModules
+#     compatibleRuntimes:
+#       - nodejs14.x
