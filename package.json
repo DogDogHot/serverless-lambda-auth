@@ -4,12 +4,21 @@
   "description": "jwt-project",
   "main": "handler.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-dev": "nodemon --exec serverless offline --stage dev"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:DogDogHot/serverless-lambda.git"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "redis": "^4.3.1",
+    "serverless-dotenv-plugin": "^4.0.2",
+    "serverless-offline": "^11.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
 }
