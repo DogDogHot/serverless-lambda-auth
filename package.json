@@ -15,7 +15,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ioredis": "^5.2.3"
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "helmet": "^6.0.0",
+    "ioredis": "^5.2.3",
+    "joi": "^17.6.2",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "serverless-http": "^2.7.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.20",
