@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "layer": "cp package.json layer/nodejs/package.json",
-    "start-dev": "nodemon --exec serverless offline --stage dev"
+    "start-local": "nodemon --exec serverless offline --stage local"
   },
   "repository": {
     "type": "git",
@@ -15,12 +15,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "helmet": "^6.0.0",
     "ioredis": "^5.2.3",
-    "joi": "^17.6.2",
+    "joi": "^17.6.3",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "serverless-http": "^2.7.0"
