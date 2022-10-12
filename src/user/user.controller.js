@@ -1,5 +1,13 @@
 const Redis = require("ioredis");
+const Joi = require("joi");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
+const saltRounds = 10;
+
+const {
+  userValidation: { userCreateSchema, userLoginSchema },
+} = require("../utils/validation");
 const redis = new Redis(process.env.REDIS_PORT, process.env.REDIS_URL);
 
 const getUserList = function (req, res) {
@@ -11,42 +19,73 @@ const getMeInfo = function (req, res) {
 
 const createUser = async function (req, res) {
   const { userId, password, name } = req.body;
-  if (!userId || !password || !name)
-    return res.status(400).json({ code: 4000, msg: "validation error" });
 
-  //joi 추가
-  let userInfo = await redis.get(`user:${userId}`);
-  //password 암호화
-  const secretPwd = password;
+  //validation
+  try {
+    await userCreateSchema.validateAsync(req.body);
+  } catch (e) {
+    return res.status(400).json({ code: 4000, msg: "validation error" });
+  }
+  const userInfo = await redis.get(`user:${userId}`);
   if (userInfo)
     return res.status(400).json({ code: 4000, msg: "validation error" });
+
+  //password 암호화
+  const secretPwd = await bcrypt.hash(password, saltRounds);
 
   await redis.set(
     `user:${userId}`,
     JSON.stringify({ password: secretPwd, name })
   );
-  const result = await redis.get("key");
-  res.status(201).json({ code: 2010, msg: "create User" });
+
+  // jwt token 추가
+  const accessToken = jwt.sign({ name }, process.env.JWT_KEY, {
+    expiresIn: "1h",
+  });
+
+  const refreshToken = jwt.sign({ name }, process.env.JWT_KEY, {
+    expiresIn: "30d",
+  });
+
+  return res.status(201).json({
+    code: 2010,
+    msg: "create User",
+    data: { accessToken, refreshToken },
+  });
 };
 
 const login = async function (req, res) {
   const { userId, password } = req.body;
-  if (!userId || !password)
-    return res.status(400).json({ code: 4000, msg: "validation error" });
 
-  //joi 추가
-  let userInfo = await redis.get(`user:${userId}`);
+  //validation
+  try {
+    await userLoginSchema.validateAsync(req.body);
+  } catch (e) {
+    console.log(e);
+    return res.status(400).json({ code: 4000, msg: "validation error" });
+  }
+
+  const userInfo = await redis.get(`user:${userId}`);
   if (!userInfo)
     return res.status(400).json({ code: 4000, msg: "validation error" });
 
-  //password 암호화
-  const secretPwd = password;
-
   const { password: userPassword, name } = JSON.parse(userInfo);
-  if (secretPwd != userPassword)
+
+  //password compare
+  const match = await bcrypt.compare(password, userPassword);
+  if (!match)
     return res.status(400).json({ code: 4000, msg: "validation error" });
 
-  res.status(200).json({ code: 2000, data: { name } });
+  // jwt token 추가
+  const accessToken = jwt.sign({ name }, process.env.JWT_KEY, {
+    expiresIn: "1h",
+  });
+
+  const refreshToken = jwt.sign({ name }, process.env.JWT_KEY, {
+    expiresIn: "30d",
+  });
+
+  res.status(200).json({ code: 2000, data: { accessToken, refreshToken } });
 };
 
 module.exports = { getUserList, getMeInfo, createUser, login };
