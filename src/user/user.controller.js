@@ -1,20 +1,31 @@
-const Redis = require("ioredis");
-const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
-const saltRounds = 10;
 
 const {
   userValidation: { userCreateSchema, userLoginSchema },
 } = require("../utils/validation");
-const redis = new Redis(process.env.REDIS_PORT, process.env.REDIS_URL);
+const userService = require("./user.service");
 
 const getUserList = function (req, res) {
   res.send("root");
 };
 const getMeInfo = function (req, res) {
-  res.send("userMe");
+  if (!req.headers["access-token"])
+    return res.status(401).json({ code: 4010, msg: "not login" });
+  try {
+    const userInfo = jwt.verify(
+      req.headers["access-token"],
+      process.env.JWT_KEY
+    );
+    return res.status(200).json({
+      code: 2000,
+      data: {
+        user: { ...userInfo },
+      },
+    });
+  } catch (error) {
+    return res.status(401).json({ code: 4010, msg: "not login" });
+  }
 };
 
 const createUser = async function (req, res) {
@@ -26,25 +37,20 @@ const createUser = async function (req, res) {
   } catch (e) {
     return res.status(400).json({ code: 4000, msg: "validation error" });
   }
-  const userInfo = await redis.get(`user:${userId}`);
+  const userInfo = await userService.getUser(userId);
   if (userInfo)
     return res.status(400).json({ code: 4000, msg: "validation error" });
 
-  //password 암호화
-  const secretPwd = await bcrypt.hash(password, saltRounds);
-
-  await redis.set(
-    `user:${userId}`,
-    JSON.stringify({ password: secretPwd, name })
-  );
-
-  // jwt token 추가
-  const accessToken = jwt.sign({ name }, process.env.JWT_KEY, {
-    expiresIn: "1h",
+  await userService.createUser({
+    userId,
+    password,
+    name,
   });
 
-  const refreshToken = jwt.sign({ name }, process.env.JWT_KEY, {
-    expiresIn: "30d",
+  // jwt token 추가
+  const { accessToken, refreshToken } = await userService.getJwt({
+    userId,
+    name,
   });
 
   return res.status(201).json({
@@ -65,7 +71,7 @@ const login = async function (req, res) {
     return res.status(400).json({ code: 4000, msg: "validation error" });
   }
 
-  const userInfo = await redis.get(`user:${userId}`);
+  const userInfo = await userService.getUser(userId);
   if (!userInfo)
     return res.status(400).json({ code: 4000, msg: "validation error" });
 
@@ -77,12 +83,9 @@ const login = async function (req, res) {
     return res.status(400).json({ code: 4000, msg: "validation error" });
 
   // jwt token 추가
-  const accessToken = jwt.sign({ name }, process.env.JWT_KEY, {
-    expiresIn: "1h",
-  });
-
-  const refreshToken = jwt.sign({ name }, process.env.JWT_KEY, {
-    expiresIn: "30d",
+  const { accessToken, refreshToken } = await userService.getJwt({
+    userId,
+    name,
   });
 
   res.status(200).json({ code: 2000, data: { accessToken, refreshToken } });

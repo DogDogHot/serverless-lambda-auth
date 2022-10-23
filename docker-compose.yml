@@ -1,0 +1,18 @@
+version: "3.7"
+services:
+  development-mysql:
+    image: amd64/mysql:8.0.31
+    restart: always
+    container_name: development-mysql
+    environment: # -e 옵션
+      - MYSQL_ROOT_PASSWORD=development!
+      - MYSQL_DATABASE=dev
+    ports: # 접근 포트 설정 (컨테이너 외부 : 컨테이너 내부)
+      - 3306:3306
+
+    command: # 명령어 실행
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes: # -v 옵션 (디렉토리 마운트 설정)
+      - ./mysql-data:/var/lib/mysql2
+
