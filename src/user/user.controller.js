@@ -6,10 +6,11 @@ const {
 } = require("../utils/validation");
 const userService = require("./user.service");
 
-const getUserList = function (req, res) {
-  res.send("root");
+const getUserList = async function (req, res) {
+  let userList = await userService.getUserList();
+  return res.status(200).json({ code: 2000, data: userList });
 };
-const getMeInfo = function (req, res) {
+const getMeInfo = async function (req, res) {
   if (!req.headers["access-token"])
     return res.status(401).json({ code: 4010, msg: "not login" });
   try {

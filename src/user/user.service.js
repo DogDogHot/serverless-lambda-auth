@@ -1,6 +1,7 @@
 const Redis = require("ioredis");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { off } = require("../app");
 
 const saltRounds = 10;
 
@@ -10,8 +11,10 @@ getUser = async (userId) => {
   return await redis.get(`user:${userId}`);
 };
 
-getUserList = async (userId) => {
-  return await redis.get(`user:${userId}`);
+getUserList = async () => {
+  let users = (await redis.keys(`user:*`)) || [];
+  users = users.map((v) => v.split(":")[1]);
+  return users;
 };
 
 createUser = async ({ userId, password, name }) => {
