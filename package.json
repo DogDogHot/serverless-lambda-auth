@@ -24,7 +24,9 @@
     "joi": "^17.6.3",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
-    "serverless-http": "^2.7.0"
+    "serverless-http": "^2.7.0",
+    "swagger-ui": "^4.15.0",
+    "swagger-ui-express": "^4.5.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.20",

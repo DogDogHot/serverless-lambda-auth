@@ -6,6 +6,8 @@ const helmet = require("helmet");
 const usersRoute = require("./user/index");
 const errorHandler = require("./middlewares/errorHandler.middleware");
 const { NotFoundError } = require("./helpers/errors.helper");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json");
 
 const app = express();
 
@@ -38,6 +40,7 @@ app.use(
   })
 );
 
+app.use("/swagger/v1", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/v1/", usersRoute);
 
 app.all("*", (_, res) => {

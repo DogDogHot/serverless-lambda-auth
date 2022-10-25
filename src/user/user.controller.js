@@ -8,7 +8,7 @@ const userService = require("./user.service");
 
 const getUserList = async function (req, res) {
   let userList = await userService.getUserList();
-  return res.status(200).json({ code: 2000, data: userList });
+  return res.status(200).json({ code: 2000, data: { userList } });
 };
 const getMeInfo = async function (req, res) {
   if (!req.headers["access-token"])

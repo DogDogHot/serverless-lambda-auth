@@ -1,0 +1,201 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Serverless Lambda with JWT",
+    "description": "Serverless Lambda with JWT",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.meet.pe.kr/api/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "user",
+      "description": "user"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": ["user"],
+        "summary": "Get user list",
+        "description": "get user all list",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "code": 2000,
+                  "data": {
+                    "userList": ["DogDogHot"]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["user"],
+        "summary": "Add new user",
+        "description": "Add new user",
+        "requestBody": {
+          "description": "Create a new pet in the store",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "code": 2010,
+                  "msg": "create User",
+                  "data": {
+                    "accessToken": "accessToken",
+                    "refreshToken": "refreshToken"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "code": 4000,
+                  "msg": "validation error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/me": {
+      "get": {
+        "tags": ["user"],
+        "summary": "Get user me",
+        "description": "get user me",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "code": 2000,
+                  "data": {
+                    "user": {
+                      "name": "DogDogHot"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not login",
+            "content": {
+              "application/json": {
+                "example": {
+                  "code": 4010,
+                  "msg": "Not Login"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": ["user"],
+        "summary": "login",
+        "description": "login",
+        "requestBody": {
+          "description": "Clogin",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLogin"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "example": {
+                  "code": 2000,
+                  "data": {
+                    "accessToken": "accessToken",
+                    "refreshToken": "refreshToken"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "code": 4000,
+                  "msg": "validation error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "example": "userId"
+          },
+          "password": {
+            "type": "string",
+            "example": "password"
+          },
+          "name": {
+            "type": "string",
+            "example": "name"
+          }
+        }
+      },
+      "UserLogin": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "example": "userId"
+          },
+          "password": {
+            "type": "string",
+            "example": "password"
+          }
+        }
+      }
+    }
+  }
+}
